@@ -140,7 +140,7 @@ fun NewProjectScreen(base: String, done: () -> Unit, back: () -> Unit) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf("edit" to "🎬 Video Edit", "test" to "🧪 App Test").forEach { (m, label) ->
                 FilterChip(selected = mode == m, onClick = { mode = m }, label = { Text(label) },
-                    colors = FilterChipDefaults.colors(selectedContainerColor = Red, selectedLabelColor = Txt))
+                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Red, selectedLabelColor = Txt))
             }
         }
         Spacer(Modifier.height(16.dp))
