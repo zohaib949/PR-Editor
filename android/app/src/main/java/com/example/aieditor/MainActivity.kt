@@ -25,16 +25,14 @@ import androidx.compose.ui.unit.sp
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-// ---------- The Privacy Lab red/black theme ----------
 val Bg = Color(0xFF0D0D0D)
-val Card = Color(0xFF1A1A1A)
+val CardBg = Color(0xFF1A1A1A)
 val Red = Color(0xFFE50914)
 val Txt = Color(0xFFF5F5F5)
 val Grey = Color(0xFF888888)
@@ -103,18 +101,18 @@ fun HomeScreen(ip: String, onIp: (String) -> Unit, projects: List<Proj>, onRefre
             colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = Red, unfocusedBorderColor = Grey, focusedTextColor = Txt, unfocusedTextColor = Txt))
         Spacer(Modifier.height(12.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            Button(onClick = onRefresh, colors = ButtonDefaults.buttonColors(containerColor = Card), modifier = Modifier.weight(1f)) { Text("Refresh", color = Red) }
+            Button(onClick = onRefresh, colors = ButtonDefaults.buttonColors(containerColor = CardBg), modifier = Modifier.weight(1f)) { Text("Refresh", color = Red) }
             Button(onClick = onNew, colors = ButtonDefaults.buttonColors(containerColor = Red), modifier = Modifier.weight(1f)) { Text("+ Naya Project", color = Txt) }
         }
         Spacer(Modifier.height(12.dp))
-        Button(onClick = openGeneral, colors = ButtonDefaults.buttonColors(containerColor = Card), modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = openGeneral, colors = ButtonDefaults.buttonColors(containerColor = CardBg), modifier = Modifier.fillMaxWidth()) {
             Text("💬 General Chat — baat karke project banao", color = Txt)
         }
         Spacer(Modifier.height(16.dp))
         Text("PROJECTS", color = Grey, fontSize = 13.sp)
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(projects) { p ->
-                Card(colors = CardDefaults.cardColors(containerColor = Card), modifier = Modifier.fillMaxWidth(),
+                Card(colors = CardDefaults.cardColors(containerColor = CardBg), modifier = Modifier.fillMaxWidth(),
                     onClick = { openProject(p.id, p.name) }) {
                     Row(Modifier.padding(14.dp).fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Column {
@@ -174,7 +172,7 @@ fun ChatScreen(base: String, pid: String, title: String, isGeneral: Boolean, onP
         LazyColumn(state = listState, modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(msgs) { m ->
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = if (m.role == "user") Arrangement.End else Arrangement.Start) {
-                    Surface(color = if (m.role == "user") Red else Card, shape = RoundedCornerShape(12.dp),
+                    Surface(color = if (m.role == "user") Red else CardBg, shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.widthIn(max = 300.dp)) {
                         Text(m.text, color = Txt, modifier = Modifier.padding(10.dp), fontSize = 14.sp)
                     }
@@ -183,10 +181,10 @@ fun ChatScreen(base: String, pid: String, title: String, isGeneral: Boolean, onP
         }
         if (!isGeneral) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { pickVideo.launch("video/*") }, colors = ButtonDefaults.buttonColors(containerColor = Card)) { Text("📎 Video", color = Red) }
+                Button(onClick = { pickVideo.launch("video/*") }, colors = ButtonDefaults.buttonColors(containerColor = CardBg)) { Text("📎 Video", color = Red) }
                 Button(onClick = {
                     msgs = msgs + Msg("user", "▶ Auto Edit shuru")
-                    httpPostForm("$base/projects/$pid/edit", mapOf()) { r ->
+                    httpPostForm("$base/projects/$pid/edit", mapOf()) {
                         onMain { msgs = msgs + Msg("editor", "✅ Queue mein lag gayi. Din bhar mein slow speed, raat ko fast. Status 'Refresh' se dekho.") }
                     }
                 }, colors = ButtonDefaults.buttonColors(containerColor = Red)) { Text("▶ Auto Edit", color = Txt) }
@@ -214,7 +212,6 @@ fun ChatScreen(base: String, pid: String, title: String, isGeneral: Boolean, onP
     }
 }
 
-// ---------- NETWORK ----------
 fun client() = OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS)
     .writeTimeout(120, TimeUnit.SECONDS).readTimeout(120, TimeUnit.SECONDS).build()
 
