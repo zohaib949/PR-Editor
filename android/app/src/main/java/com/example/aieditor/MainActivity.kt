@@ -1,9 +1,10 @@
 package com.example.aieditor
-import androidx.activity.compose.BackHandler
+
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -61,13 +62,10 @@ fun App() {
     var isGeneralChat by remember { mutableStateOf(true) }
 
     fun base() = "http://$serverIp:8000"
-        fun base() = "http://$serverIp:8000"
 
     BackHandler(enabled = screen != "home") {
         screen = "home"
     }
-
-    fun refresh() {
 
     fun refresh() {
         httpGet("${base()}/projects") { body ->
@@ -152,7 +150,7 @@ fun NewProjectScreen(base: String, done: () -> Unit, back: () -> Unit) {
         }
         Spacer(Modifier.height(16.dp))
         Button(onClick = {
-            httpPostForm("$base/projects", mapOf("name" to name, "mode" to mode)) { done() }
+            httpPostForm("$base/projects", mapOf("name" to name, "mode" to mode)) { onMain { done() } }
         }, colors = ButtonDefaults.buttonColors(containerColor = Red), modifier = Modifier.fillMaxWidth()) {
             Text("Banao", color = Txt)
         }
