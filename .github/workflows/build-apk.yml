@@ -20,6 +20,10 @@ jobs:
       - name: Setup Gradle (cache)
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Generate Gradle wrapper
+        working-directory: ./android
+        run: gradle wrapper --gradle-version 8.9
+
       - name: Build Debug APK
         working-directory: ./android
         run: ./gradlew assembleDebug --no-daemon
