@@ -1,5 +1,5 @@
 package com.example.aieditor
-
+import androidx.activity.compose.BackHandler
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -61,6 +61,13 @@ fun App() {
     var isGeneralChat by remember { mutableStateOf(true) }
 
     fun base() = "http://$serverIp:8000"
+        fun base() = "http://$serverIp:8000"
+
+    BackHandler(enabled = screen != "home") {
+        screen = "home"
+    }
+
+    fun refresh() {
 
     fun refresh() {
         httpGet("${base()}/projects") { body ->
