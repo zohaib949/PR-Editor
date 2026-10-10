@@ -21,6 +21,7 @@ for d in (ASSETS, PROJECTS_DIR, OUTPUT_DIR, TESTS_DIR):
     d.mkdir(parents=True, exist_ok=True)
 
 GEMINI_KEY = os.getenv("GEMINI_API_KEY", "")      # free key from aistudio.google.com
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-latest")  # change via: setx GEMINI_MODEL "model-name"
 PEXELS_KEY = os.getenv("PEXELS_API_KEY", "")      # free key from pexels.com/api
 PIXABAY_KEY = os.getenv("PIXABAY_API_KEY", "")    # free key from pixabay.com/api/docs
 
@@ -64,7 +65,7 @@ def gemini_chat(prompt: str, history: list) -> str:
         return None
     try:
         import urllib.request
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_KEY}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_KEY}"
         contents = [{"role": "user" if i % 2 == 0 else "model", "parts": [{"text": m}]} for i, m in enumerate(history)]
         contents.append({"role": "user", "parts": [{"text": EXPERT_RULES + "\n\n" + prompt}]})
         body = json.dumps({"contents": contents}).encode()
@@ -73,7 +74,7 @@ def gemini_chat(prompt: str, history: list) -> str:
             data = json.loads(r.read())
         return data["candidates"][0]["content"]["parts"][0]["text"]
     except Exception as e:
-        return f"[AI offline - fix key/network] {e}"
+        return f"[AI offline - fix key/model/network] model={GEMINI_MODEL} | {e}"
 
 def offline_reply(prompt: str) -> str:
     p = prompt.lower()
